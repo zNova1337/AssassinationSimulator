@@ -1,23 +1,18 @@
 package databasegui;
 import com.sun.glass.events.KeyEvent;
-import java.awt.Color;
+import java.awt.*;
 import java.sql.*;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
-import java.util.Locale;
-import java.util.Vector;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableModel;
-import javax.swing.text.PlainDocument;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
+import javax.swing.border.Border;
+import javax.swing.table.*;
+import javax.swing.text.*;
 /**
  *
  * @author zNova
  */
-
-//Fix the update code
+//https://github.com/zNova1337/AssassinationSimulator
 class JTextFieldLimit extends PlainDocument {
   private int limit;
   JTextFieldLimit(int limit) {
@@ -41,9 +36,8 @@ class JTextFieldLimit extends PlainDocument {
 
 public class DataBasePalette extends javax.swing.JFrame {
     Connection con = null;//Will have a value at InitDataBase function
-    DefaultTableModel tableModel = null;
-
-    
+    DefaultTableModel tableModel = null;//Will have a value at InitDataBase function
+    Vector<String> dataList = new Vector<>();
     public TableModel resultSetToTableModel(ResultSet rs) {
         try {
             ResultSetMetaData metaData = rs.getMetaData();
@@ -74,15 +68,14 @@ public class DataBasePalette extends javax.swing.JFrame {
             return null;
         }
     }
-    private void UpdateTable()
-      throws SQLException {
+    
+    private void UpdateTable()throws SQLException {
     Statement stmt = null;
     String query = "select * from information";
     try {
         stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery(query);
        jTable1.setModel(resultSetToTableModel(rs)); 
-       
        rs.close();
     } catch (SQLException e ) {
         throw e;
@@ -107,22 +100,17 @@ public class DataBasePalette extends javax.swing.JFrame {
     } catch (Exception e){
        e.printStackTrace();
     }
-    
     return returnval;
-}
-    
-    Vector<String> dataList = new Vector<>();
+    }
     
     void SetValueToVector()throws SQLException{
-     String[] tmp = new String[getNumberRows() + 1];
-    Statement stmt = null;
+    String[] tmp = new String[getNumberRows() + 1];
     String query =
             "select NAME, ADDRESS, GENDER,CONTACT,UID " +
             "from " + "gradeict" + ".information";
     try {
-        stmt = con.createStatement();
+        Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery(query);
-        
         while (rs.next()) {
             String Name = rs.getString("NAME");
             tmp[rs.getRow()] += Name;
@@ -133,19 +121,15 @@ public class DataBasePalette extends javax.swing.JFrame {
         System.out.println("Caught an exception parsing vector");
     } 
     }
-   
-    
     
      public void batchUpdate(String squery) throws SQLException {
      Statement stmt = null;
      try {
         con.setAutoCommit(false);
         stmt = con.createStatement();
-
         stmt.addBatch(squery);
         stmt.executeBatch();
         con.commit();
-
      } catch(BatchUpdateException b) {
        throw b;
      } catch(SQLException ex) {
@@ -155,11 +139,11 @@ public class DataBasePalette extends javax.swing.JFrame {
         con.setAutoCommit(true);
     }
     }
-    void InitDataBase(){
+     
+    final void InitDataBase(){
          try{
             Class.forName("com.mysql.jdbc.Driver");//Loads the driver
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/gradeict","dogmatism","123");//Makes connection to the database
-            
             String query =
             "select NAME, ADDRESS, GENDER,CONTACT,UID " +
             "from " + "gradeict" + ".information";
@@ -176,21 +160,18 @@ public class DataBasePalette extends javax.swing.JFrame {
             }
            SetValueToVector();
         }catch(Exception ex){
-            System.out.println("Start the database First");
-            //ex.printStackTrace();
+            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         }    
     }
-    
-    void OverwriteComponents(){
-        this.setLocationRelativeTo(null);
-        JTableHeader head = jTable1.getTableHeader();
-        head.setBackground(Color.red);
-       // head.setForeground(Color.GREEN);
+
+    final void OverwriteComponents(){
+        this.setLocationRelativeTo(null);//Set the form to center
         jButton4.setVisible(false);
-         jTable1.setModel(tableModel);
-         jTextField5.setDocument(new JTextFieldLimit(11));
-         jTextField2.setDocument(new JTextFieldLimit(1));
-         try {
+        jTable1.setModel(tableModel);
+        jTextField5.setDocument(new JTextFieldLimit(11));
+        jTextField2.setDocument(new JTextFieldLimit(1));
+        try {
         UpdateTable();
         }catch(SQLException ex){
             System.out.println(ex.getMessage());
@@ -198,8 +179,8 @@ public class DataBasePalette extends javax.swing.JFrame {
     }
     public DataBasePalette() {
         InitDataBase();//First call you cant set value for jTable1 as it gets overwritten in the InitComponent method
-        initComponents();//Sets value to the jTable and other components i have
-        OverwriteComponents();//Sets the jTable1 value
+        initComponents();//Generated by netbeans
+        OverwriteComponents();//Overwrites several components
     }
     
     @SuppressWarnings("unchecked")
@@ -229,6 +210,8 @@ public class DataBasePalette extends javax.swing.JFrame {
         jButton7 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
+        jTextField6 = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Assassination Bot Simulator 1.0.0");
@@ -292,15 +275,16 @@ public class DataBasePalette extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(51, 255, 0));
         jLabel8.setText("This is only a simulation program and all names are fictional");
-        jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 280, 400, 38));
+        jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 330, 400, 38));
 
         jLabel2.setBackground(new java.awt.Color(0, 0, 0));
         jLabel2.setForeground(new java.awt.Color(51, 255, 0));
-        jLabel2.setText("Gender :");
-        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(244, 97, 51, -1));
+        jLabel2.setText("Github :");
+        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 51, -1));
 
+        jTextField2.setEditable(false);
         jTextField2.setBackground(new java.awt.Color(153, 153, 153));
-        jTextField2.setToolTipText("Gender of target person");
+        jTextField2.setToolTipText("Github link");
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField2ActionPerformed(evt);
@@ -314,7 +298,7 @@ public class DataBasePalette extends javax.swing.JFrame {
                 jTextField2KeyTyped(evt);
             }
         });
-        jPanel2.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(299, 94, 120, -1));
+        jPanel2.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 90, 120, -1));
 
         jLabel3.setBackground(new java.awt.Color(0, 0, 0));
         jLabel3.setForeground(new java.awt.Color(51, 255, 0));
@@ -393,13 +377,13 @@ public class DataBasePalette extends javax.swing.JFrame {
 
         jButton6.setBackground(new java.awt.Color(0, 0, 0));
         jButton6.setForeground(new java.awt.Color(51, 255, 51));
-        jButton6.setText("Remove selected dead person");
+        jButton6.setText("Remove Selected Dead Person");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);
             }
         });
-        jPanel2.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, -1, 30));
+        jPanel2.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, 220, 30));
 
         jButton7.setBackground(new java.awt.Color(0, 0, 0));
         jButton7.setForeground(new java.awt.Color(51, 255, 51));
@@ -409,7 +393,7 @@ public class DataBasePalette extends javax.swing.JFrame {
                 jButton7ActionPerformed(evt);
             }
         });
-        jPanel2.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 240, 170, 30));
+        jPanel2.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 240, 180, 30));
 
         jButton2.setBackground(new java.awt.Color(0, 0, 0));
         jButton2.setForeground(new java.awt.Color(51, 255, 51));
@@ -419,13 +403,37 @@ public class DataBasePalette extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel2.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 130, -1));
+        jPanel2.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, 140, -1));
 
         jLabel9.setBackground(new java.awt.Color(0, 0, 0));
         jLabel9.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(51, 255, 0));
         jLabel9.setText("Target Info:");
         jPanel2.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 6, -1, 38));
+
+        jTextField6.setEditable(false);
+        jTextField6.setBackground(new java.awt.Color(153, 153, 153));
+        jTextField6.setText("https://github.com/zNova1337/AssassinationSimulator");
+        jTextField6.setToolTipText("Gender of target person");
+        jTextField6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField6ActionPerformed(evt);
+            }
+        });
+        jTextField6.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextField6KeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextField6KeyTyped(evt);
+            }
+        });
+        jPanel2.add(jTextField6, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 310, 360, -1));
+
+        jLabel10.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel10.setForeground(new java.awt.Color(51, 255, 0));
+        jLabel10.setText("Gender :");
+        jPanel2.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(244, 97, 51, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -441,10 +449,8 @@ public class DataBasePalette extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE)))
         );
 
         pack();
@@ -461,7 +467,7 @@ public class DataBasePalette extends javax.swing.JFrame {
         } catch(BatchUpdateException b) {
         JOptionPane.showMessageDialog(null,  "Looks like this person has been cured","Cured already",0);
         } catch(SQLException ex) {
-       JOptionPane.showMessageDialog(null,  "Looks like this person has been cured","Cured already",0);
+        JOptionPane.showMessageDialog(null,  "Looks like this person has been cured","Cured already",0);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -486,59 +492,23 @@ public class DataBasePalette extends javax.swing.JFrame {
             System.out.println(ex.getMessage());
         }
     }//GEN-LAST:event_jButton3ActionPerformed
-   
-    private String format(String txt){//returns the formatted string for mysql syntax
-        String escape = "\"";//String escape sequence
-        return escape + txt + escape;
-    }
-    private String formatComma(String txt){//returns the formatted string for mysql syntax but with comma
-        String escape = "\"";
-        String comma = ",";
-        return comma + escape + txt + escape;
-    }
-    
-    private String Update(String[] arr){
-        int row = jTable1.getSelectedRow();
-        String id = jTable1.getModel().getValueAt(row, 0).toString();
-        return "update `information` set `NAME` = '" +arr[0]+ "', `ADDRESS` = '" + arr[1]+"', `GENDER` = '" +arr[2]+ "', `CONTACT` = '" +arr[3]+"', `UID` = '"+arr[4]+"'  where `id` = '"+id+"'";
-    }
-   
-    private String Insert(String[] arr){
-        String tmp = null;
-        tmp = "insert into information (NAME,ADDRESS,GENDER,CONTACT,UID) ";
-        tmp += "values (";
-        for(int i = 0 ; i < arr.length; i++){
-            if(i == 0){
-            tmp += format(arr[i]);//The first element in array must not have comma since its at zero
-            }else{
-            tmp += formatComma(arr[i]);
-            }
-        }
-        tmp += ")";
-        return tmp;
-    }
-    
+
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         int row = jTable1.getSelectedRow();
         try{
         String id = jTable1.getModel().getValueAt(row, 0).toString();
-        PreparedStatement ps = null;
         String delRow = "delete from information where id='"+id+"'";
-        try {
-            ps = con.prepareStatement(delRow);
-            ps.execute();
-            ps.close();
-            UpdateTable();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,  e.getMessage());
-        }
+        PreparedStatement ps = con.prepareStatement(delRow);
+        ps.execute();
+        ps.close();
+        UpdateTable();
         }catch(Exception e){
             JOptionPane.showMessageDialog(null,  "Select something","Error",0);
         }
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-       for (int i = jTable1.getRowCount() - 1; i >= 0; i--) {
+       for (int i = jTable1.getRowCount() - 1; i >= 0; i--) {//Loop through all rows
         String id = jTable1.getModel().getValueAt(i, 0).toString();
         PreparedStatement ps = null;
         String delRow = "delete from information where id='"+id+"'";
@@ -564,18 +534,49 @@ public class DataBasePalette extends javax.swing.JFrame {
            evt.consume();
        }
     }//GEN-LAST:event_jTextField2KeyTyped
+
+    private void jTextField5KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField5KeyTyped
+            
+    }//GEN-LAST:event_jTextField5KeyTyped
+
+    private String format(String txt){//returns the formatted string for mysql syntax
+        String escape = "\"";//String escape sequence
+        return escape + txt + escape;
+    }
+    private String formatComma(String txt){//returns the formatted string for mysql syntax but with comma
+        String escape = "\"";
+        String comma = ",";
+        return comma + escape + txt + escape;
+    }
+    
+    private String Update(String[] arr){//Can be optimized by making this function variadic
+        int row = jTable1.getSelectedRow();
+        String id = jTable1.getModel().getValueAt(row, 0).toString();//returns the id
+        return "update `information` set `NAME` = '" +arr[0]+ "', `ADDRESS` = '" + arr[1]+"', `GENDER` = '" +arr[2]+ "', `CONTACT` = '" +arr[3]+"', `UID` = '"+arr[4]+"'  where `id` = '"+id+"'";
+    }
+   
+    private String Insert(String[] arr){
+        String tmp;
+        tmp = "insert into information (NAME,ADDRESS,GENDER,CONTACT,UID) ";
+        tmp += "values (";
+        for(int i = 0 ; i < arr.length; i++){
+            if(i == 0){
+            tmp += format(arr[i]);//The first element in array must not have comma since its at zero
+            }else{
+            tmp += formatComma(arr[i]);
+            }
+        }
+        tmp += ")";
+        return tmp;
+    }
     
     public String removeLast(String str) {
         if(str.length() > 0){
         str = str.substring(0, str.length() - 1);
         }
         return str;
-    }
+    }    
     
-    private void jTextField5KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField5KeyTyped
-            
-    }//GEN-LAST:event_jTextField5KeyTyped
-
     private int randomint(int min,int max){
         return ThreadLocalRandom.current().nextInt(min, max);
     }
@@ -590,12 +591,13 @@ public class DataBasePalette extends javax.swing.JFrame {
     Locale obj = new Locale("", countryCode);
     return obj.getDisplayCountry();
     }
-    private boolean CheckDataVectorAgainstName(String name){
+    private boolean CheckDataVectorAgainstName(String name){//This function is used to prevent duplicate for kill random person button
         for(int i = 0; i < dataList.size(); i++){
             if(dataList.elementAt(i).contains(name))return true;
         }
         return false;
-    }  
+    }
+    
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         String[] Names = {"Meliodas","Goku","Naruto","Luffy","Ash","Aang","Bobby","Duterte","Digong","Dexter","Mark","John","Angelo","James","Jasper","Douglas","Archie","Dodong"};
         String[] Gender = {"M","F"};
@@ -603,27 +605,22 @@ public class DataBasePalette extends javax.swing.JFrame {
         String fName = Names[randomint(0,Names.length)];
         String fAddress = GetCountry();
         String fGender = Gender[randomint(0,Gender.length)];
-        String fContact = String.valueOf(randomlong(11111111111L,99999999999L));
+        String fContact = String.valueOf(randomlong(11111111L,99999999999L));//Need to add prefix for specific country
         String fID = ID[randomint(0,ID.length)];
         String[] bd = {fName,fAddress,fGender,fContact,fID};
         String squery = Insert(bd);
         try {  
-        if(!CheckDataVectorAgainstName(fName)){//First Check
-        SetValueToVector();//Set val
+        if(!CheckDataVectorAgainstName(fName)){//First Check if the Data is not in the vector
+        SetValueToVector();//Set the data in the vector
         if(!CheckDataVectorAgainstName(fName)){//Reverify
-        //System.out.println(squery);
         batchUpdate(squery);//Update the database first
         DefaultTableModel modeltable = tableModel;//Parse the data
         modeltable.addRow(new Object[]{jTextField2.getText(),jTextField3.getText(),jTextField4.getText(),jTextField5.getText(),jTextField7.getText(),modeltable.getRowCount()});//Add rows on jTable
         UpdateTable();
-        }else{
-            //System.out.println("Already there");
         }
-        }else{
-            //System.out.println("Already there");
         }
         } catch(BatchUpdateException b) {
-             System.out.println(b.getMessage());
+        System.out.println(b.getMessage());
       // JOptionPane.showMessageDialog(null,  "Looks like this person has been cured","Cured already v1",0);
         } catch(SQLException ex) {
        // JOptionPane.showMessageDialog(null,  "Looks like this person has been cured","Cured already v2",0);
@@ -641,7 +638,6 @@ public class DataBasePalette extends javax.swing.JFrame {
         jTextField2.setText(dtm.getValueAt(row, 3).toString());
         jTextField5.setText(dtm.getValueAt(row, 4).toString());
         jTextField7.setText(dtm.getValueAt(row, 5).toString());
-       
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jTextField5KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField5KeyPressed
@@ -655,7 +651,6 @@ public class DataBasePalette extends javax.swing.JFrame {
             } else {
                jTextField5.setEditable(false);
             }
-// TODO add your handling code here:
     }//GEN-LAST:event_jTextField5KeyPressed
 
     private void jTextField2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyPressed
@@ -674,8 +669,8 @@ public class DataBasePalette extends javax.swing.JFrame {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         try {
         String[] arr = {jTextField3.getText(),jTextField4.getText(),jTextField2.getText(),jTextField5.getText(),jTextField7.getText()};
-        String xD = Update(arr);
-        batchUpdate(xD);
+        String UpdateQuery = Update(arr);
+        batchUpdate(UpdateQuery);
         DefaultTableModel modeltable = tableModel;//Parse the data
         modeltable.addRow(new Object[]{jTextField2.getText(),jTextField3.getText(),jTextField4.getText(),jTextField5.getText(),jTextField7.getText(),modeltable.getRowCount()});//Add rows on jTable
         UpdateTable();
@@ -697,6 +692,19 @@ public class DataBasePalette extends javax.swing.JFrame {
         jButton4.setEnabled(true);
         jButton4.setVisible(true);
     }//GEN-LAST:event_jTable1MouseExited
+    
+    //Random stuffs i cant remove for some reason
+    private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField6ActionPerformed
+
+    private void jTextField6KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField6KeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField6KeyPressed
+
+    private void jTextField6KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField6KeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField6KeyTyped
 
     /**
      * @param args the command line arguments
@@ -740,6 +748,7 @@ public class DataBasePalette extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -756,6 +765,7 @@ public class DataBasePalette extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
+    private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField7;
     // End of variables declaration//GEN-END:variables
 }
