@@ -285,6 +285,7 @@ public class DataBasePalette extends javax.swing.JFrame {
         jTextField2.setEditable(false);
         jTextField2.setBackground(new java.awt.Color(153, 153, 153));
         jTextField2.setToolTipText("Github link");
+        jTextField2.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField2ActionPerformed(evt);
@@ -307,6 +308,7 @@ public class DataBasePalette extends javax.swing.JFrame {
 
         jTextField3.setBackground(new java.awt.Color(153, 153, 153));
         jTextField3.setToolTipText("Name of target person");
+        jTextField3.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jPanel2.add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 55, 156, -1));
 
         jLabel4.setBackground(new java.awt.Color(0, 0, 0));
@@ -316,6 +318,7 @@ public class DataBasePalette extends javax.swing.JFrame {
 
         jTextField4.setBackground(new java.awt.Color(153, 153, 153));
         jTextField4.setToolTipText("Address of target person");
+        jTextField4.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jPanel2.add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 94, 156, -1));
 
         jLabel5.setBackground(new java.awt.Color(0, 0, 0));
@@ -325,6 +328,7 @@ public class DataBasePalette extends javax.swing.JFrame {
 
         jTextField5.setBackground(new java.awt.Color(153, 153, 153));
         jTextField5.setToolTipText("Contact Number of target person");
+        jTextField5.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jTextField5.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jTextField5KeyPressed(evt);
@@ -342,6 +346,7 @@ public class DataBasePalette extends javax.swing.JFrame {
 
         jTextField7.setBackground(new java.awt.Color(153, 153, 153));
         jTextField7.setToolTipText("ID of target person");
+        jTextField7.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jPanel2.add(jTextField7, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 137, 156, -1));
 
         jButton1.setBackground(new java.awt.Color(0, 0, 0));
@@ -363,7 +368,7 @@ public class DataBasePalette extends javax.swing.JFrame {
                 jButton3ActionPerformed(evt);
             }
         });
-        jPanel2.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 190, -1, -1));
+        jPanel2.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 190, -1, -1));
 
         jButton4.setBackground(new java.awt.Color(0, 0, 0));
         jButton4.setForeground(new java.awt.Color(51, 255, 51));
@@ -403,7 +408,7 @@ public class DataBasePalette extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel2.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, 140, -1));
+        jPanel2.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, 150, -1));
 
         jLabel9.setBackground(new java.awt.Color(0, 0, 0));
         jLabel9.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
@@ -415,6 +420,7 @@ public class DataBasePalette extends javax.swing.JFrame {
         jTextField6.setBackground(new java.awt.Color(153, 153, 153));
         jTextField6.setText("https://github.com/zNova1337/AssassinationSimulator");
         jTextField6.setToolTipText("Gender of target person");
+        jTextField6.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jTextField6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField6ActionPerformed(evt);
@@ -428,7 +434,7 @@ public class DataBasePalette extends javax.swing.JFrame {
                 jTextField6KeyTyped(evt);
             }
         });
-        jPanel2.add(jTextField6, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 310, 360, -1));
+        jPanel2.add(jTextField6, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 310, 340, -1));
 
         jLabel10.setBackground(new java.awt.Color(0, 0, 0));
         jLabel10.setForeground(new java.awt.Color(51, 255, 0));
@@ -710,14 +716,14 @@ public class DataBasePalette extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
+        /* Set the Motif look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Motif".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
