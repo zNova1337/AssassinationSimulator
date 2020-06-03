@@ -522,6 +522,7 @@ public class DataBasePalette extends javax.swing.JFrame {
             ps.close();
             UpdateTable();
             dataList.clear();//To prevent the bug where you cant kill random person after clearing out data
+            numberchecker.clear();//Reset the RNG storage
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,  e.getMessage());
         }
@@ -596,6 +597,31 @@ public class DataBasePalette extends javax.swing.JFrame {
     Locale obj = new Locale("", countryCode);
     return obj.getDisplayCountry();
     }
+    
+    Vector<Integer> numberchecker = new Vector<>();
+     boolean CheckRepeat(int num,String[] array){
+        if(numberchecker.size() == array.length)numberchecker.clear();//Prevent stackover flow as we are doing recursion
+        if(numberchecker.size() != 0){
+        for(int i = 0; i < numberchecker.size(); i++){
+            if(numberchecker.elementAt(i) == num)return true;
+        }}
+        return false;
+    }
+    
+    
+    
+    private int RNGnoRepeat(String[] array){
+    int tmp;
+    int randomInt = randomint(0,array.length);
+    if(CheckRepeat(randomInt,array)){
+        return RNGnoRepeat(array);//Recurse to get the number that is not yet on the list
+    }else{
+        tmp = randomInt;
+    }
+    numberchecker.add(randomInt);
+    return tmp;
+    }
+    
     private boolean CheckDataVectorAgainstName(String name){//This function is used to prevent duplicate for kill random person button
         for(int i = 0; i < dataList.size(); i++){
             if(dataList.elementAt(i).contains(name))return true;
@@ -607,7 +633,7 @@ public class DataBasePalette extends javax.swing.JFrame {
         String[] Names = {"Meliodas","Goku","Naruto","Luffy","Ash","Aang","Bobby","Duterte","Digong","Dexter","Mark","John","Angelo","James","Jasper","Douglas","Archie","Dodong"};
         String[] Gender = {"M","F"};
         String[] ID = {"999-1551","VIP","Diamond","Gold","Black VIP","God"};
-        String fName = Names[randomint(0,Names.length)];
+        String fName = Names[RNGnoRepeat(Names)];//Only name name is non repeating for now
         String fAddress = GetCountry();
         String fGender = Gender[randomint(0,Gender.length)];
         String fContact = String.valueOf(randomlong(11111111L,99999999999L));//Need to add prefix for specific country
@@ -615,21 +641,23 @@ public class DataBasePalette extends javax.swing.JFrame {
         String[] bd = {fName,fAddress,fGender,fContact,fID};
         String squery = Insert(bd);
         try {  
-        if(!CheckDataVectorAgainstName(fName)){//First Check if the Data is not in the vector
+       // if(!CheckDataVectorAgainstName(fName)){//First Check if the Data is not in the vector
         SetValueToVector();//Set the data in the vector
         if(!CheckDataVectorAgainstName(fName)){//Reverify
         batchUpdate(squery);//Update the database first
         DefaultTableModel modeltable = tableModel;//Parse the data
         modeltable.addRow(new Object[]{jTextField2.getText(),jTextField3.getText(),jTextField4.getText(),jTextField5.getText(),jTextField7.getText(),modeltable.getRowCount()});//Add rows on jTable
         UpdateTable();
-        }
+        //}
+        }else{
+             JOptionPane.showMessageDialog(null,  "All random person has been used","null",0);
         }
         } catch(BatchUpdateException b) {
-        System.out.println(b.getMessage());
+       // System.out.println(b.getMessage());
       // JOptionPane.showMessageDialog(null,  "Looks like this person has been cured","Cured already v1",0);
         } catch(SQLException ex) {
-       // JOptionPane.showMessageDialog(null,  "Looks like this person has been cured","Cured already v2",0);
-        System.out.println(ex.getMessage());
+        JOptionPane.showMessageDialog(null,  "All random person has been used","null",0);
+       // System.out.println(ex.getMessage());
         }
         
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -680,12 +708,15 @@ public class DataBasePalette extends javax.swing.JFrame {
         modeltable.addRow(new Object[]{jTextField2.getText(),jTextField3.getText(),jTextField4.getText(),jTextField5.getText(),jTextField7.getText(),modeltable.getRowCount()});//Add rows on jTable
         UpdateTable();
         } catch(BatchUpdateException b) {
-        JOptionPane.showMessageDialog(null,  "Looks like this person has been updated","Cured already",0);
+        //JOptionPane.showMessageDialog(null,  "Looks like this person has been updated","Updated already",0);
         b.printStackTrace();
         } catch(SQLException ex) {
-       JOptionPane.showMessageDialog(null,  "Looks like this person has been updated","Cured already",0);
+       JOptionPane.showMessageDialog(null,  "Looks like this person has been updated","Updated already",0);
        ex.printStackTrace();
+        }catch(ArrayIndexOutOfBoundsException ex){
+            JOptionPane.showMessageDialog(null,  "Select something to edit","Null",0);
         }
+        
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jTable1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseReleased
