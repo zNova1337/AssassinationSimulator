@@ -1,11 +1,9 @@
 package databasegui;
 import com.sun.glass.events.KeyEvent;
-import java.awt.*;
 import java.sql.*;
 import javax.swing.*;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-import javax.swing.border.Border;
 import javax.swing.table.*;
 import javax.swing.text.*;
 /**
@@ -523,6 +521,7 @@ public class DataBasePalette extends javax.swing.JFrame {
             ps.execute();
             ps.close();
             UpdateTable();
+            dataList.clear();//To prevent the bug where you cant kill random person after clearing out data
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,  e.getMessage());
         }
